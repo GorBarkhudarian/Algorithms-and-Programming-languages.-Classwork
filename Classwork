@@ -1,0 +1,174 @@
+//N:1 Merge sort
+import java.io.*;
+
+class Merge {
+    static void merge(int arr[], int l, int m, int r)
+    {
+        int x = m - l + 1;
+        int y = r - m;
+        int L[] = new int[x];
+        int R[] = new int[y];
+
+        for (int i = 0; i < x; ++i)
+            L[i] = arr[l + i];
+        for (int j = 0; j < y; ++j)
+            R[j] = arr[m + 1 + j];
+
+        int i = 0, j = 0;
+
+        int k = l;
+        while (i < x && j < x) {
+            if (L[i] <= R[j]) {
+                arr[k] = L[i];
+                i++;
+            }
+            else {
+                arr[k] = R[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < x) {
+            arr[k] = L[i];
+            i++;
+            k++;
+        }
+
+        while (j < y) {
+            arr[k] = R[j];
+            j++;
+            k++;
+        }
+    }
+
+    
+    static void sort(int arr[], int l, int r)
+    {
+        if (l < r) {
+            int m = l + (r - l) / 2;
+
+            sort(arr, l, m);
+            sort(arr, m + 1, r);
+            merge(arr, l, m, r);
+        }
+    }
+
+    static void printArray(int arr[])
+    {
+        int n = arr.length;
+        for (int i = 0; i < n; ++i)
+            System.out.print(arr[i] + " ");
+        System.out.println();
+    }
+
+    public static void main(String args[])
+    {
+        int arr[] = { 12, 11, 13, 5, 6, 7 };
+
+        System.out.println("Given array is: ");
+        printArray(arr);
+
+        sort(arr, 0, arr.length - 1);
+
+        System.out.println("\nSorted array is: ");
+        printArray(arr);
+    }
+}
+
+//N:2 Custom Dictionary based on Arrays
+public class CustomDictionary {
+    private String[] keys;
+    private String[] values;
+    private int size;
+    private int capacity;
+
+    public CustomDictionary(int capacity) {
+        this.capacity = capacity;
+        this.keys = new String[capacity];
+        this.values = new String[capacity];
+        this.size = 0;
+    }
+
+    public void put(String key, String value) {
+        for (int i = 0; i < size; i++) {
+            if (keys[i].equals(key)) {
+                values[i] = value;
+                return;
+            }
+        }
+
+        if (size < capacity) {
+            keys[size] = key;
+            values[size] = value;
+            size++;
+        } else {
+            System.out.println("As my dictionary is full I can't add more key-value.");
+        }
+    }
+
+    public String get(String key) {
+        for (int i = 0; i < size; i++) {
+            if (keys[i].equals(key)) {
+                return values[i];
+            }
+        }
+        return null; 
+    }
+
+//remove key value
+    public void remove(String key) {
+        for (int i = 0; i < size; i++) {
+            if (keys[i].equals(key)) {
+                for (int j = i; j < size - 1; j++) {
+                    keys[j] = keys[j + 1];
+                    values[j] = values[j + 1];
+                }
+                keys[size - 1] = null;
+                values[size - 1] = null;
+                size--;
+                return;
+            }
+        }
+        System.out.println("As key not found => Cannot remove.");
+    }
+
+    public boolean containsKey(String key) {
+        for (int i = 0; i < size; i++) {
+            if (keys[i].equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void printDictionary() {
+        System.out.println("Custom Dictionary is:");
+        for (int i = 0; i < size; i++) {
+            System.out.println(keys[i] + " , " + values[i]);
+        }
+    }
+
+    public static void main(String[] args) {
+        CustomDictionary dictionary = new CustomDictionary(5); // I took capacity of 5
+
+        dictionary.put("Hayastan", "Erkir");
+        dictionary.put("Kapan", "Qaxaq");
+        dictionary.put("Syunik", "Marz");
+        dictionary.put("Antarashat", "Gyux");
+
+        dictionary.printDictionary();
+
+        System.out.println("\nGet value for 'Kapan': " + dictionary.get("Kapan"));
+
+        dictionary.put("Kapan", "Syuniki marzkentron");
+        System.out.println("\nUpdated value for 'Kapan': " + dictionary.get("Kapan"));
+
+        dictionary.remove("Syunik");
+        System.out.println("\nAfter removing 'Syunik':");
+        dictionary.printDictionary();
+
+        System.out.println("\nContains 'Antarashat': " + dictionary.containsKey("Antarashat"));
+        System.out.println("Contains 'Goris': " + dictionary.containsKey("Goris"));
+    }
+}
